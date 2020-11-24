@@ -1,3 +1,4 @@
+// Artikelnummer som ska filtreras
 let inputArticlenumber = 500;
 
 class Products {
@@ -73,9 +74,32 @@ stock.addProduct(toy2);
 stock.addProduct(clothes2);
 stock.addProduct(toy3);
 
-// fler klasser
-class ShoppingCart {}
-class Customer {}
+// ingen aning om ShoppingCart ska vara helt egen eller extend stock som nedan.
+class ShoppingCart extends Stock {}
 
-console.log(stock);
-stock.filterObject(); 
+let shoppingcart = new ShoppingCart();
+shoppingcart.addProduct(toy3);
+shoppingcart.addProduct(clothes1);
+console.log(shoppingcart);
+
+// Har nog tänkt helt fel här...
+class Customer {
+    constructor(name = "", orderHistory = 0, shoppingCart) {
+        this.name = name;
+        this.orderHistory = orderHistory;
+        this.shoppingCart = [];
+    }
+}
+
+let customer1 = new Customer("PersonNamn1", 100);
+let customer2 = new Customer("PersonName2");
+
+console.log(customer1);
+console.log(customer2);
+
+// console.log(stock);
+// stock.filterObject(); 
+
+// Behöver jag koppla nedanstående för att lägga in med typ customer.addCustomer(customer1);
+let customer = new Customer();
+console.log(customer);
