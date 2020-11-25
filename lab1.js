@@ -1,22 +1,19 @@
-// Artikelnummer som ska filtreras
-let inputArticlenumber = 500;
-
 class Products {
-    constructor(articleNu, title, description, nuInStock, price) {
+    constructor(articleNu, title, description, price, nuInStock) {
         this.articleNu = articleNu;
         this.title = title;
         this.description = description;
-        this.nuInStock = nuInStock;
         this.price = price;
+        this.nuInStock = nuInStock;
     }
 
-    filterObjectProd(){
-        if (this.articleNu === inputArticlenumber){
-        console.log('filter artikelnummer: ' + this.articleNu + '. För produkten ' + this.title)}
+    filterObjectProd(value){
+      if (this.articleNu === value){
+      console.log(`Filtrerat artikelnummer: ${this.articleNu}. Gäller för produkten: ${this.title}`)}
     }
 
     print() {
-        console.log(this.title + ' - ' + this.nuInStock);
+        console.log(`Produkten har artikelnummer: ${this.articleNu} och titel: ${this.title}.Beskrivningen är: ${this.description}.Produkten kostar ${this.price} SEK och det är för tillfället ${this.nuInStock} i varulager.`);
     }
 }
 
@@ -34,19 +31,21 @@ class Toys extends Products {
     }
 }
 
-let clothes1 = new Clothes(100, 'Tröja', 'Blå långärmad', 10, 199, 'L');
-let toy1 = new Toys(200, 'Leksaksbil', 'Röd Ferrari', 5, 99, 3);
-let toy2 = new Toys(300, 'Helikopter', 'Fjärrstyrd', 2, 399, 7);
-let clothes2 = new Clothes(400, 'Byxa', 'Svarta Jeans', 9, 399, 'M');
-let toy3 = new Toys(500, 'Google Stadia', 'Tv-spel', 100, 1399, 12);
-
 class Stock {
-    constructor() {
-        this.products = [];
+    constructor(products = []) {
+        this.products = products;
     }
 
-    addProduct(product) {
-        this.products.push(product);
+    addProduct(articleNu, title, description, price, nuInStock) {
+        this.products.push(new Products(articleNu, title, description, price, nuInStock));
+    }
+
+    addClothes(articleNu, title, description, price, nuInStock, size) {
+        this.products.push(new Clothes(articleNu, title, description, price, nuInStock, size));
+    }
+      
+    addToy(articleNu, title, description, price, nuInStock, ageFrom) {
+        this.products.push(new Toys(articleNu, title, description, price, nuInStock, ageFrom));
     }
 
     inventory() {
@@ -56,50 +55,112 @@ class Stock {
         }
     }
 
-    filterObject() {
-        console.log("NU SKA DET FILTRERAS!!!");
-        for ( let products of this.products ) {
-            products.filterObjectProd();
-        }
+    searcharticleNu(value) {
+      return this.products.filter((x) => x.articleNu == value)[0];
+    }
+
+    filterObject(value) {
+      for ( let products of this.products ) {
+          products.filterObjectProd(value);
+      }
     }
 }
+
+class ShoppingCart {
+    constructor() {
+      this.shoppingCartArray = [];
+    }
+    
+    printShoppingCart() {
+      console.log(this.shoppingCartArray);
+    }
+    
+    addToCart(productToAdd) {
+      this.shoppingCartArray.push(stock.searcharticleNu(productToAdd));
+    }
+    
+    removeFromCart(productToRemove) {
+      this.shoppingCartArray.splice(
+        this.shoppingCartArray.indexOf(
+          this.shoppingCartArray.filter((x) => x.searcharticleNu == productToRemove)[0]
+        ),
+        1
+      );
+    }
+    
+    calcSumOfShoppingCart() {
+      console.log(
+        ` Total cost: ${this.shoppingCartArray
+          .map((x) => x.price)
+          .reduce((total, currVal) => total + currVal)}`
+      );
+    }
+}
+  
+class Customer {
+  constructor(name) {
+    this.name = name;
+    this.orderHistory = [];
+    this.shoppingCart = new ShoppingCart();
+  }
+    
+    makePurchase() {
+      this.orderHistory.push({
+        date: new Date().toDateString(),
+        order: this.shoppingCart.shoppingCartArray,
+      });
+      for (let i = 0; i < this.shoppingCart.shoppingCartArray.length - 1; i++) {
+        stock.searcharticleNu(this.shoppingCart.shoppingCartArray[i].articleNu)
+          .nuInStock--;
+        console.log(
+          stock.searcharticleNu(this.shoppingCart.shoppingCartArray[i].articleNu)
+        );
+      }
+      this.shoppingCart.shoppingCartArray = [];
+      console.log(this.orderHistory);
+    }
+  }
 
 let stock = new Stock();
-let product = new Products();
 
-// Adds clothes & Toys
-stock.addProduct(clothes1);
-stock.addProduct(toy1);
-stock.addProduct(toy2);
-stock.addProduct(clothes2);
-stock.addProduct(toy3);
+// Lägger till produkter
+stock.addProduct(01, "Bara en oanvändbar produkt", "Inget skit att ha!", 1, 100000);
+stock.addClothes(100,"Tröja","Blå långärmad",10, 100,"L");
+stock.addClothes(400, 'Byxa', 'Svarta Jeans', 20, 200, 'M');
+stock.addToy(200,"Leksaksbil","Röd Ferrari", 30, 300, 3);
+stock.addToy(300, 'Helikopter', 'Fjärrstyrd', 40, 400, 7);
+stock.addToy(500, 'Google Stadia', 'Tv-spel', 100, 500, 12);
 
-// ingen aning om ShoppingCart ska vara helt egen eller extend stock som nedan.
-class ShoppingCart extends Stock {}
+// Skriver ut alla produkter (inklusive produkter, kläder och toys)
+// stock.printStock();
 
-let shoppingcart = new ShoppingCart();
-shoppingcart.addProduct(toy3);
-shoppingcart.addProduct(clothes1);
-console.log(shoppingcart);
+// Filtrera produkter utifrån artikelnummer (funkar ej!!!)
+// stock.searcharticleNu(200); 
 
-// Har nog tänkt helt fel här...
-class Customer {
-    constructor(name = "", orderHistory = 0, shoppingCart) {
-        this.name = name;
-        this.orderHistory = orderHistory;
-        this.shoppingCart = [];
-    }
-}
+let newCustomer = new Customer("Kalle");
+newCustomer.shoppingCart.addToCart(100);
+newCustomer.shoppingCart.addToCart(200);
+newCustomer.shoppingCart.addToCart(300);
+// newCustomer.shoppingCart.addToCart(400);
+// newCustomer.shoppingCart.addToCart(500);
+console.log(newCustomer);
 
-let customer1 = new Customer("PersonNamn1", 100);
-let customer2 = new Customer("PersonName2");
+newCustomer.shoppingCart.printShoppingCart();
 
-console.log(customer1);
-console.log(customer2);
+newCustomer.shoppingCart.removeFromCart(200);
 
+newCustomer.shoppingCart.printShoppingCart();
+
+newCustomer.shoppingCart.calcSumOfShoppingCart();
+
+newCustomer.makePurchase();
+
+
+// Skriv ut alla produkter som finns i Stock/Varulager:
+// stock.inventory();
+
+// Visa alla produkter som finns i Stock/Varulager:
 // console.log(stock);
-// stock.filterObject(); 
 
-// Behöver jag koppla nedanstående för att lägga in med typ customer.addCustomer(customer1);
-let customer = new Customer();
-console.log(customer);
+// Filtrera utifrån artikelnumret/parametern
+// stock.filterObject(300);    
