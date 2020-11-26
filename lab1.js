@@ -131,9 +131,6 @@ stock.addToy(200,"Leksaksbil","Röd Ferrari", 30, 300, 3);
 stock.addToy(300, 'Helikopter', 'Fjärrstyrd', 40, 400, 7);
 stock.addToy(500, 'Google Stadia', 'Tv-spel', 100, 500, 12);
 
-// Filtrera produkter utifrån artikelnummer (funkar ej!!!)
-// stock.searcharticleNu(200); 
-
 let newCustomer = new Customer("Kalle");
 newCustomer.shoppingCart.addToCart(100);
 newCustomer.shoppingCart.addToCart(200);
@@ -141,17 +138,14 @@ newCustomer.shoppingCart.addToCart(300);
 // newCustomer.shoppingCart.addToCart(400);
 // newCustomer.shoppingCart.addToCart(500);
 
+// Metoder för att lägga till/ta bort produkter för kunden
 console.log(newCustomer);
-
-newCustomer.shoppingCart.printShoppingCart();
-
+// newCustomer.shoppingCart.printShoppingCart();
 newCustomer.shoppingCart.removeFromCart(200);
-
-newCustomer.shoppingCart.printShoppingCart();
-
-newCustomer.shoppingCart.calcSumOfShoppingCart();
-
-newCustomer.makePurchase();
+// newCustomer.shoppingCart.printShoppingCart();
+// newCustomer.shoppingCart.calcSumOfShoppingCart();
+// newCustomer.makePurchase();
+console.log(newCustomer);
 
 // Visa alla produkter som finns i Stock/Varulager:
 // console.log(stock);
