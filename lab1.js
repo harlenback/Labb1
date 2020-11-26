@@ -7,11 +7,6 @@ class Products {
         this.nuInStock = nuInStock;
     }
 
-    searchAfterObjectProducts(value){
-      if (this.articleNu === value){
-      console.log(`Filtrerat artikelnummer: ${this.articleNu}. Gäller för produkten: ${this.title}`)}
-    }
-
     print() {
         console.log(`Produkten har artikelnummer: ${this.articleNu} och titel: ${this.title}.Beskrivningen är: ${this.description}.Produkten kostar ${this.price} SEK och det är för tillfället ${this.nuInStock} i varulager.`);
     }
@@ -55,13 +50,15 @@ class Stock {
         }
     }
 
-    searcharticleNu(value) {
+    filterarticleNu(value) {
       return this.products.filter((x) => x.articleNu === value)[0];
     }
 
     searchAfterObject(value) {
       for ( let products of this.products ) {
-          products.searchAfterObjectProducts(value);
+          if (products.articleNu === value){
+            console.log(`Filtrerat artikelnummer: ${products.articleNu}. Gäller för produkten: ${products.title}`);
+          }
       }
     }
 }
@@ -76,13 +73,13 @@ class ShoppingCart {
     }
     
     addToCart(productToAdd) {
-      this.shoppingCartArray.push(stock.searcharticleNu(productToAdd));
+      this.shoppingCartArray.push(stock.filterarticleNu(productToAdd));
     }
     
     removeFromCart(productToRemove) {
       this.shoppingCartArray.splice(
         this.shoppingCartArray.indexOf(
-          this.shoppingCartArray.filter((x) => x.searcharticleNu === productToRemove)[0]
+          this.shoppingCartArray.filter((x) => x.filterarticleNu === productToRemove)[0]
         ),
         1
       );
@@ -110,10 +107,10 @@ class Customer {
         order: this.shoppingCart.shoppingCartArray,
       });
       for (let i = 0; i < this.shoppingCart.shoppingCartArray.length - 1; i++) {
-        stock.searcharticleNu(this.shoppingCart.shoppingCartArray[i].articleNu)
+        stock.filterarticleNu(this.shoppingCart.shoppingCartArray[i].articleNu)
           .nuInStock--;
         console.log(
-          stock.searcharticleNu(this.shoppingCart.shoppingCartArray[i].articleNu)
+          stock.filterarticleNu(this.shoppingCart.shoppingCartArray[i].articleNu)
         );
       }
       this.shoppingCart.shoppingCartArray = [];
@@ -154,4 +151,4 @@ console.log(newCustomer);
 // stock.inventory();
 
 // Filtrera utifrån artikelnumret/parametern
-// stock.searchAfterObject(300);    
+stock.searchAfterObject(200);
