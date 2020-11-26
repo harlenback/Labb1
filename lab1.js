@@ -7,7 +7,7 @@ class Products {
         this.nuInStock = nuInStock;
     }
 
-    filterObjectProd(value){
+    searchAfterObjectProducts(value){
       if (this.articleNu === value){
       console.log(`Filtrerat artikelnummer: ${this.articleNu}. Gäller för produkten: ${this.title}`)}
     }
@@ -49,19 +49,19 @@ class Stock {
     }
 
     inventory() {
-        console.log("All products");
+        console.log("Alla produkter");
         for ( let products of this.products ) {
             products.print();
         }
     }
 
     searcharticleNu(value) {
-      return this.products.filter((x) => x.articleNu == value)[0];
+      return this.products.filter((x) => x.articleNu === value)[0];
     }
 
-    filterObject(value) {
+    searchAfterObject(value) {
       for ( let products of this.products ) {
-          products.filterObjectProd(value);
+          products.searchAfterObjectProducts(value);
       }
     }
 }
@@ -82,7 +82,7 @@ class ShoppingCart {
     removeFromCart(productToRemove) {
       this.shoppingCartArray.splice(
         this.shoppingCartArray.indexOf(
-          this.shoppingCartArray.filter((x) => x.searcharticleNu == productToRemove)[0]
+          this.shoppingCartArray.filter((x) => x.searcharticleNu === productToRemove)[0]
         ),
         1
       );
@@ -131,9 +131,6 @@ stock.addToy(200,"Leksaksbil","Röd Ferrari", 30, 300, 3);
 stock.addToy(300, 'Helikopter', 'Fjärrstyrd', 40, 400, 7);
 stock.addToy(500, 'Google Stadia', 'Tv-spel', 100, 500, 12);
 
-// Skriver ut alla produkter (inklusive produkter, kläder och toys)
-// stock.printStock();
-
 // Filtrera produkter utifrån artikelnummer (funkar ej!!!)
 // stock.searcharticleNu(200); 
 
@@ -143,6 +140,7 @@ newCustomer.shoppingCart.addToCart(200);
 newCustomer.shoppingCart.addToCart(300);
 // newCustomer.shoppingCart.addToCart(400);
 // newCustomer.shoppingCart.addToCart(500);
+
 console.log(newCustomer);
 
 newCustomer.shoppingCart.printShoppingCart();
@@ -155,12 +153,11 @@ newCustomer.shoppingCart.calcSumOfShoppingCart();
 
 newCustomer.makePurchase();
 
+// Visa alla produkter som finns i Stock/Varulager:
+// console.log(stock);
 
 // Skriv ut alla produkter som finns i Stock/Varulager:
 // stock.inventory();
 
-// Visa alla produkter som finns i Stock/Varulager:
-// console.log(stock);
-
 // Filtrera utifrån artikelnumret/parametern
-// stock.filterObject(300);    
+// stock.searchAfterObject(300);    
